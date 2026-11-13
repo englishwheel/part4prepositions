@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Предлоги Part 4 — Полный тренажер</title>
+<style>
+  :root{
+    --bg:#f4f7fb; --card:#fff; --primary:#2563eb; --primary-dark:#1e40af;
+    --ok:#16a34a; --bad:#dc2626; --border:#e2e8f0; --text:#1e293b; --muted:#64748b;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:"Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.55;
+  }
+  header{
+    background:linear-gradient(135deg,#2563eb,#1e40af);
+    color:#fff; padding:32px 20px; text-align:center;
+  }
+  header h1{margin:0 0 8px; font-size:1.7rem}
+  header p{margin:0; opacity:.9}
+  main{max-width:950px; margin:0 auto; padding:24px 16px 100px}
+  
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:14px;
+    padding:22px 20px; margin-bottom:22px; box-shadow:0 4px 14px rgba(0,0,0,.04);
+  }
+  .card h2{
+    margin:0 0 6px; font-size:1.15rem; color:var(--primary-dark);
+    display:flex; align-items:center; gap:8px;
+  }
+  .hint{color:var(--muted); font-size:.9rem; margin:0 0 16px}
+
+  /* Drag and Drop */
+  .drag-pool {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; 
+    background: #f8fafc; padding: 15px; border-radius: 10px; border: 2px dashed #cbd5e1;
+    min-height: 60px;
+  }
+  .drag-item {
+    background: #fff; border: 2px solid var(--primary); color: var(--primary-dark);
+    padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: grab;
+    user-select: none; transition: transform 0.1s;
+  }
+  .drag-item:active { cursor: grabbing; transform: scale(0.95); }
+  .drag-item.dragging { opacity: 0.5; }
+  
+  .drop-zone {
+    display: inline-block; min-width: 60px; height: 34px; line-height: 30px;
+    border-bottom: 2px solid var(--primary); margin: 0 5px; text-align: center;
+    vertical-align: middle; background: #eff6ff; transition: background 0.2s;
+  }
+  .drop-zone.hovered { background: #bfdbfe; }
+  .drop-zone.filled { border-bottom-color: transparent; }
+  .drop-zone .drag-item { margin: 0; padding: 2px 8px; font-size: 0.9rem; }
+
+  .drag-sentence { margin-bottom: 15px; font-size: 1.05rem; line-height: 1.8; }
+  
+  /* Text Inputs */
+  .q{margin-bottom:18px; padding-bottom:12px; border-bottom:1px dashed #e2e8f0}
+  .q:last-child{border-bottom:none; margin-bottom:0; padding-bottom:0}
+  .prompt{margin-bottom:10px; font-size:1.05rem; line-height: 1.7;}
+  .prompt b { color: var(--primary); }
+  
+  input[type="text"]{
+    font:inherit; padding:6px 10px; border:1px solid var(--border);
+    border-radius:8px; background:#f8fafc; width:120px; margin: 0 5px;
+    text-align: center; font-weight: bold;
+  }
+  input[type="text"]:focus{outline:2px solid #bfdbfe; border-color:var(--primary)}
+  
+  .feedback{font-size:.9rem; margin-top:8px; font-weight:600}
+  .feedback.ok{color:var(--ok)}
+  .feedback.bad{color:var(--bad)}
+  .feedback.ok::before{content:"✔ "}
+  .feedback.bad::before{content:"✘ "}
+  
+  .btn-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:8px}
+  button {
+    font:inherit; font-weight:600; cursor:pointer; border:none; border-radius:10px;
+    padding:10px 20px; transition:.15s;
+  }
+  .btn-primary{background:var(--primary); color:#fff}
+  .btn-primary:hover{background:var(--primary-dark)}
+  .btn-ghost{background:#fff; color:var(--primary-dark); border:1px solid var(--primary)}
+  .btn-ghost:hover{background:#eff6ff}
+
+  .card-title { font-weight: bold; color: var(--primary-dark); margin: 24px 0 12px; font-size: 1.1rem; border-bottom: 2px solid var(--primary); padding-bottom: 4px; display: inline-block;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Предлоги Part 4</h1>
+  <p>Полный интерактивный тренажер (Drag & Drop + Все карточки)</p>
+</header>
+
+<main>
+
+  <!-- ================= ЧАСТЬ 1: DRAG AND DROP ================= -->
+  <section class="card" id="drag-section">
+    <h2>1. Перетащите предлоги в пропуски</h2>
+    <p class="hint">Перетащите подходящую кнопку с предлогом в пустое окно. (В пуле есть лишние предлоги).</p>
+
+    <div class="drag-pool" id="pool">
+      <!-- Сюда будут добавлены кнопки через JS -->
+    </div>
+
+    <div id="drag-questions">
+      <div class="drag-sentence">1. You look a bit <span class="drop-zone" data-expected="under"></span> the weather.</div>
+      <div class="drag-sentence">2. People can be addicted <span class="drop-zone" data-expected="to"></span> anything: food, work, shopping.</div>
+      <div class="drag-sentence">3. Bear <span class="drop-zone" data-expected="in"></span> mind that some children will need help.</div>
+      <div class="drag-sentence">4. It's easy to blame someone <span class="drop-zone" data-expected="for"></span> their problems.</div>
+      <div class="drag-sentence">5. We must care <span class="drop-zone" data-expected="for"></span> those in need.</div>
+      <div class="drag-sentence">6. I can't cope <span class="drop-zone" data-expected="with"></span> such a pile of work this weekend.</div>
+      <div class="drag-sentence">7. Damage <span class="drop-zone" data-expected="to"></span> the vehicle was considerable.</div>
+      <div class="drag-sentence">8. My friend was extremely disappointed <span class="drop-zone" data-expected="with"></span> his purchase.</div>
+      <div class="drag-sentence">9. Jim and Mary fall <span class="drop-zone" data-expected="out"></span> every few weeks, but their quarrels never last.</div>
+      <div class="drag-sentence">10. He seems to be full <span class="drop-zone" data-expected="of"></span> beans this morning.</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" id="checkDragBtn">Проверить перетаскивание</button>
+      <button class="btn-ghost" id="resetDragBtn">Сбросить</button>
+    </div>
+  </section>
+
+  <!-- ================= ЧАСТЬ 2: ТЕКСТОВЫЕ ЗАДАНИЯ ================= -->
+  <section class="card" id="text-section">
+    <h2>2. Задания из файла (Карточки 1–12)</h2>
+    <p class="hint">Впишите предлоги. Если пропусков два, вводите их в оба поля (если ответов несколько, они принимаются через слэш, например: <i>about / over</i>).</p>
+
+    <div id="cards-container">
+      <!-- Задания будут сгенерированы через JS -->
+    </div>
+    
+    <div class="btn-row">
+      <button class="btn-primary" id="checkTextBtn">Проверить всё</button>
+      <button class="btn-ghost" id="resetTextBtn">Сбросить</button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  var $ = function(s, r) { return (r || document).querySelector(s); };
+  var $$ = function(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  // ================== DRAG AND DROP LOGIC ==================
+  // Все предлоги, которые нужны + несколько лишних для интереса
+  var poolItems = ["under", "to", "in", "for", "with", "out", "of", "on", "up", "after", "about"];
+  var pool = $("#pool");
+  var draggedEl = null;
+
+  // Перемешиваем
+  poolItems.sort(() => Math.random() - 0.5);
+
+  poolItems.forEach(function(prep) {
+    var div = document.createElement("div");
+    div.className = "drag-item";
+    div.draggable = true;
+    div.textContent = prep;
+    div.id = "drag-" + prep + "-" + Math.random().toString(36).substr(2, 5);
+    
+    div.addEventListener("dragstart", function(e) {
+      draggedEl = this;
+      e.dataTransfer.setData("text/plain", this.textContent);
+      setTimeout(() => this.classList.add("dragging"), 0);
+    });
+    div.addEventListener("dragend", function() {
+      this.classList.remove("dragging");
+    });
+    pool.appendChild(div);
+  });
+
+  var dropZones = $$(".drop-zone");
+  dropZones.forEach(function(zone) {
+    zone.addEventListener("dragover", function(e) {
+      e.preventDefault();
+      this.classList.add("hovered");
+    });
+    zone.addEventListener("dragleave", function() {
+      this.classList.remove("hovered");
+    });
+    zone.addEventListener("drop", function(e) {
+      e.preventDefault();
+      this.classList.remove("hovered");
+      
+      if (draggedEl) {
+        if (this.children.length > 0) {
+          pool.appendChild(this.children[0]); // Возвращаем старое
+        }
+        this.appendChild(draggedEl);
+        this.classList.add("filled");
+        this.style.backgroundColor = "transparent";
+        draggedEl = null;
+      }
+    });
+  });
+
+  $("#checkDragBtn").addEventListener("click", function() {
+    var correct = 0;
+    var total = dropZones.length;
+    
+    dropZones.forEach(function(zone) {
+      var expected = zone.getAttribute("data-expected");
+      var child = zone.children[0];
+      
+      if (child) {
+        if (child.textContent === expected) {
+          zone.style.borderBottomColor = "var(--ok)";
+          child.style.borderColor = "var(--ok)";
+          child.style.color = "var(--ok)";
+          correct++;
+        } else {
+          zone.style.borderBottomColor = "var(--bad)";
+          child.style.borderColor = "var(--bad)";
+          child.style.color = "var(--bad)";
+        }
+      } else {
+        zone.style.borderBottomColor = "var(--bad)";
+      }
+    });
+    
+    alert("Верно: " + correct + " из " + total);
+  });
+
+  $("#resetDragBtn").addEventListener("click", function() {
+    dropZones.forEach(function(zone) {
+      if (zone.children.length > 0) {
+        var child = zone.children[0];
+        pool.appendChild(child);
+        child.style.borderColor = "var(--primary)";
+        child.style.color = "var(--primary-dark)";
+      }
+      zone.style.borderBottomColor = "var(--primary)";
+      zone.classList.remove("filled");
+    });
+  });
+
+  // ================== TEXT INPUT LOGIC ==================
+  function norm(s) {
+    if (!s) return '';
+    return s.toString().toLowerCase().replace(/\s+/g, ' ').trim();
+  }
+
+  var mistakeCounts = new WeakMap();
+
+  function getMistakes(el) { return mistakeCounts.get(el) || 0; }
+  function incMistakes(el) {
+    var n = getMistakes(el) + 1;
+    mistakeCounts.set(el, n);
+    return n;
+  }
+
+  function setFeedback(fbEl, ok, correctText, mistakes) {
+    fbEl.classList.remove('ok', 'bad');
+    if(ok) {
+      fbEl.textContent = 'Верно';
+      fbEl.classList.add('ok');
+      return;
+    }
+    if(mistakes >= 3) {
+      fbEl.textContent = 'Неверно. Правильный ответ: ' + correctText;
+    } else {
+      var left = 3 - mistakes;
+      fbEl.textContent = 'Неверно. Попробуйте ещё раз (до подсказки осталось: ' + left + ').';
+    }
+    fbEl.classList.add('bad');
+  }
+
+  function checkTextQuestion(qEl) {
+    var answerStr = qEl.getAttribute('data-answer'); // например, "with/about"
+    var inputs = qEl.querySelectorAll('input[type=text]');
+    var fb = qEl.querySelector('.feedback');
+    
+    var answers = answerStr.split('/'); // ["with", "about"]
+    
+    // Проверка на пустоту
+    var allFilled = true;
+    for(var i=0; i<inputs.length; i++) {
+        if(!inputs[i].value.trim()) allFilled = false;
+    }
+    
+    if(!allFilled) {
+      fb.classList.remove('ok', 'bad');
+      fb.textContent = 'Заполните все пропуски';
+      fb.classList.add('bad');
+      return false;
+    }
+
+    var ok = true;
+    var correctDisplay = [];
+
+    for(var i=0; i<inputs.length; i++) {
+        var userVal = norm(inputs[i].value);
+        var expectedRaw = answers[i] || answers[0]; // если предлог один, а полей почему-то больше
+        
+        // Разбиваем возможные варианты (например, "about/over")
+        var possible = expectedRaw.split('|'); 
+        var isMatch = false;
+        for(var j=0; j<possible.length; j++) {
+            if(userVal === norm(possible[j])) {
+                isMatch = true; break;
+            }
+        }
+        
+        if(!isMatch) ok = false;
+        correctDisplay.push(expectedRaw.replace(/\|/g, ' / '));
+    }
+
+    var mistakes = ok ? getMistakes(qEl) : incMistakes(qEl);
+    var displayAnswer = correctDisplay.join(' и ');
+    
+    setFeedback(fb, ok, displayAnswer, mistakes);
+    return ok;
+  }
+
+  function checkAllText() {
+    var total = 0, correct = 0;
+    $$('#cards-container .q').forEach(function(q) {
+      total++;
+      if(checkTextQuestion(q)) correct++;
+    });
+    
+    alert("Результат: " + correct + " из " + total);
+  }
+
+  function resetAllText() {
+    $$('#cards-container input[type=text]').forEach(function(i) { i.value = ''; });
+    $$('#cards-container .feedback').forEach(function(f) {
+      f.textContent = '';
+      f.classList.remove('ok', 'bad');
+    });
+    $$('#cards-container .q').forEach(function(el) { mistakeCounts.delete(el); });
+  }
+
+  // ================== ДАННЫЕ (ВСЕ 12 КАРТОЧЕК) ==================
+  // Формат answer: если 2 пропуска, пишем через слэш: "with/about". 
+  // Если один из них имеет варианты, пишем "about|over" и в коде это обрабатывается.
+  var cardsData = [
+    { title: "CARD 1", items: [
+      { text: "You look a bit ___ the weather.", answer: "under" },
+      { text: "People can be addicted ___ anything: food, work, shopping, sports, and even love.", answer: "to" },
+      { text: "Bear ___ mind that some children will need help.", answer: "in" },
+      { text: "It's easy to blame someone ___ their problems.", answer: "for" },
+      { text: "We must care ___ those in need.", answer: "for" },
+      { text: "I can't cope ___ such a pile of work this weekend.", answer: "with" },
+      { text: "Damage ___ the vehicle was considerable.", answer: "to" },
+      { text: "My friend was extremely disappointed ___ his purchase.", answer: "with" },
+      { text: "Jim and Mary fall ___ every few weeks, but their quarrels never last.", answer: "out" },
+      { text: "He seems to be full ___ beans this morning - you can hardly keep him quiet.", answer: "of" }
+    ]},
+    { title: "CARD 2", items: [
+      { text: "They will begin to blame someone ___ their unhappiness.", answer: "for" },
+      { text: "Does he get along ___ his mother-in-law?", answer: "with" },
+      { text: "I've always got ___ well with Henry.", answer: "on" },
+      { text: "___ addition to a semi-detached house in town she has a cottage in the country.", answer: "in" },
+      { text: "In fact, my work is to show our impact ___ our planet.", answer: "on" },
+      { text: "Her problem is lack ___ sleep.", answer: "of" },
+      { text: "I always feel cozy when it starts to pour ___ rain.", answer: "with" },
+      { text: "I don't want to quarrel ___ you.", answer: "with" },
+      { text: "She fell ___ with her sister.", answer: "out" },
+      { text: "There are three important points we must bear ___ mind.", answer: "in" }
+    ]},
+    { title: "CARD 3", items: [
+      { text: "Can a person be addicted ___ food?", answer: "to" },
+      { text: "I will care ___ the animals.", answer: "for" },
+      { text: "I just don't fit ___ with any of the kids at my new school.", answer: "in" },
+      { text: "After that cup of coffee, I'm really full ___ beans!", answer: "of" },
+      { text: "We need to assess the impact ___ climate change.", answer: "on" },
+      { text: "Let us not quarrel ___ such unimportant matters.", answer: "about|over" },
+      { text: "They were full ___ beans after winning the match.", answer: "of" },
+      { text: "Was there much damage ___ the car?", answer: "to" },
+      { text: "She feared she wouldn't be able to cope ___ two new babies.", answer: "with" },
+      { text: "She's someone you can rely ___.", answer: "on" }
+    ]},
+    { title: "CARD 4", items: [
+      { text: "Are your friends easy to deal ___?", answer: "with" },
+      { text: "You've been ___ the weather for some days now, why don't you see a doctor?", answer: "under" },
+      { text: "Everyone can be passionate ___ something new and exciting for a few days.", answer: "about" },
+      { text: "Don't blame me ___ your unhappiness.", answer: "for" },
+      { text: "Pilots communicate ___ the airport by radio.", answer: "with" },
+      { text: "So tell me, did you fall ___ with your boss?", answer: "out" },
+      { text: "He doesn't fit ___ with the other pupils in his class.", answer: "in" },
+      { text: "He could not get along ___ his neighbors.", answer: "with" },
+      { text: "Do you get ___ well with your friends?", answer: "on" },
+      { text: "I am extremely disappointed ___ you.", answer: "with|in" }
+    ]},
+    { title: "CARD 5", items: [
+      { text: "How would you cope ___ unemployment and the resulting loss of income?", answer: "with" },
+      { text: "He tried to limit the damage ___ his reputation by blaming other people.", answer: "to" },
+      { text: "If you eat well, you'll be full ___ beans throughout the day.", answer: "of" },
+      { text: "Gardening can improve fitness. ___ addition, gardeners report better self-esteem.", answer: "in" },
+      { text: "Her decision shows a lack ___ sensitivity.", answer: "of" },
+      { text: "The children ran inside when it began to pour ___ rain.", answer: "with" },
+      { text: "I ended up quarreling ___ my teacher ___ the grade she gave me for my project.", answer: "with/about|over" },
+      { text: "They always rely ___ their relatives when they are abroad.", answer: "on" },
+      { text: "He got a response ___ his letter.", answer: "to" },
+      { text: "There is no shortage ___ examples.", answer: "of" }
+    ]},
+    { title: "CARD 6", items: [
+      { text: "Have you got any friends who are hard to deal ___?", answer: "with" },
+      { text: "What are you passionate ___?", answer: "about" },
+      { text: "Jimmy is easy for me to get along ___.", answer: "with" },
+      { text: "Do you get ___ well with your sister?", answer: "on" },
+      { text: "The reduction in the number of days that Parliament sat would impact ___ the quality of its work.", answer: "on" },
+      { text: "Lack ___ concentration was a real problem.", answer: "of" },
+      { text: "Please don't quarrel ___ me ___ money.", answer: "with/about|over" },
+      { text: "There was shortage ___ food during the war", answer: "of" },
+      { text: "He doesn't share ___.", answer: "with" },
+      { text: "She blamed herself ___ everything that went wrong.", answer: "for" }
+    ]},
+    { title: "CARD 7", items: [
+      { text: "Do you share gardening tips (advice) ___ friends and strangers?", answer: "with" },
+      { text: "They communicate ___ each other often by mail.", answer: "with" },
+      { text: "I don't want to fall ___ and you're right.", answer: "out" },
+      { text: "___ addition to his flat in London, he has a villa in Italy and a castle in Scotland.", answer: "in" },
+      { text: "We were so looking forward to stretching out on the beach in the sunshine, but it poured ___ rain the whole time we were there.", answer: "with" },
+      { text: "You may rely ___ me!", answer: "on" },
+      { text: "There was no response ___ my question.", answer: "to" },
+      { text: "I shared the story ___ my friends on Facebook.", answer: "with" },
+      { text: "There is no obvious solution ___ the problem.", answer: "to" },
+      { text: "Everybody teamed ___ to clean the room after the party.", answer: "up" }
+    ]},
+    { title: "CARD 8", items: [
+      { text: "Friends share things ___ us, and let us share ___ them.", answer: "with/with" },
+      { text: "I don't know how to get along ___ those difficult people.", answer: "with" },
+      { text: "The lack ___ water has caused the animals to die of thirst.", answer: "of" },
+      { text: "However, quantity could have an impact ___ quality.", answer: "on" },
+      { text: "It poured ___ rain the entire night.", answer: "with" },
+      { text: "I always rely ___ him in times of trouble.", answer: "on" },
+      { text: "Don't forget to share ___ others.", answer: "with" },
+      { text: "We have no shortage ___ applications for the job", answer: "of" },
+      { text: "The boy takes ___ his father.", answer: "after" },
+      { text: "What does it mean to treat someone ___ respect?", answer: "with" }
+    ]},
+    { title: "CARD 9", items: [
+      { text: "You are not always going to agree with your family members, many times you and your family members are going to disagree or even quarrel ___ a variety of things.", answer: "about|over" },
+      { text: "How do you deal ___ problems in friendship when they come up?", answer: "with" },
+      { text: "But it's not only a cure ___ boredom, it also has a lot of benefits.", answer: "for" },
+      { text: "They couldn't cope ___ difficulties.", answer: "with" },
+      { text: "Do you get along ___ your boss?", answer: "with" },
+      { text: "I never seem to get ___ well with people who are easily offended.", answer: "on" },
+      { text: "Remember that everybody wants to feel secure and confident in friendship and sometimes needs a shoulder to cry ___.", answer: "on" },
+      { text: "He got a response ___ his letter.", answer: "to" },
+      { text: "She shared her toys ___ her brother.", answer: "with" },
+      { text: "The solution ___ the problem was relatively simple.", answer: "to" }
+    ]},
+    { title: "CARD 10", items: [
+      { text: "We really get ___ well with each other, spend a lot of time together.", answer: "on" },
+      { text: "Ted takes ___ his dad and grandad.", answer: "after" },
+      { text: "Do not interrupt them, do not blame the person directly ___ the conflict.", answer: "for" },
+      { text: "Many people play online games as a cure ___ boredom.", answer: "for" },
+      { text: "You'll have an opportunity to communicate ___ other bloggers.", answer: "with" },
+      { text: "Are you addicted ___ the Internet?", answer: "to" },
+      { text: "We'd like to share ___ you something special.", answer: "with" },
+      { text: "Jenni really takes ___ her mother.", answer: "after" },
+      { text: "He treats everyone ___ respect.", answer: "with" },
+      { text: "I'm open to discussion, ___ reasonable limits.", answer: "within" }
+    ]},
+    { title: "CARD 11", items: [
+      { text: "Besides, I think that people who have a strong family behind them feel more secure and confident and can deal ___ life better.", answer: "with" },
+      { text: "Of course, you need your family's support to rely ___.", answer: "on" },
+      { text: "Moreover, they often blame each other ___ the problem.", answer: "for" },
+      { text: "Bear ___ mind that very often the treasures around us go undiscovered.", answer: "in" },
+      { text: "I've already teamed ___ with some trustworthy guys from our school.", answer: "up" },
+      { text: "Care ___ your friend.", answer: "for" },
+      { text: "Can lack ___ sleep cause illnesses?", answer: "of" },
+      { text: "We hope you'll be fine here, that is you will never be ___ the weather at our camp.", answer: "under" },
+      { text: "The fire damage ___ the house was serious.", answer: "to" },
+      { text: "I teamed ___ with Jane to write the report.", answer: "up" }
+    ]},
+    { title: "CARD 12", items: [
+      { text: "I think it's nice to have someone you can rely ___ and share all your experiences ___.", answer: "on/with" },
+      { text: "If you have a twin you are never lonely -- there's always someone to talk to, someone who will come to you if you need a shoulder to cry ___.", answer: "on" },
+      { text: "He's also a very energetic man, full ___ beans.", answer: "of" },
+      { text: "This is my grandad John. My father and I take ___ him.", answer: "after" },
+      { text: "People don't treat each other ___ respect.", answer: "with" },
+      { text: "Generally, friends are easy to deal ___.", answer: "with" },
+      { text: "Sometimes, people end ___ unhappy.", answer: "up" },
+      { text: "Is it easy for you to make ___ with a friend after a quarrel?", answer: "up" },
+      { text: "Are you passionate ___ your garden?", answer: "about" },
+      { text: "Team ___ with others to work on your own business strategies.", answer: "up" }
+    ]}
+  ];
+
+  var container = $("#cards-container");
+  
+  cardsData.forEach(function(card) {
+    var title = document.createElement("div");
+    title.className = "card-title";
+    title.textContent = card.title;
+    container.appendChild(title);
+
+    card.items.forEach(function(item) {
+      var qDiv = document.createElement("div");
+      qDiv.className = "q";
+      
+      // Подсчет количества пропусков в тексте
+      var gapCount = (item.text.match(/___/g) || []).length;
+      var promptHtml = item.text;
+      
+      // Заменяем каждый пропуск на input
+      for (var i=0; i<gapCount; i++) {
+          promptHtml = promptHtml.replace('___', '<input type="text" class="gap-input" autocomplete="off">');
+      }
+      
+      var promptDiv = document.createElement("div");
+      promptDiv.className = "prompt";
+      promptDiv.innerHTML = promptHtml;
+      
+      var feedback = document.createElement("div");
+      feedback.className = "feedback";
+      
+      qDiv.appendChild(promptDiv);
+      qDiv.appendChild(feedback);
+      qDiv.setAttribute("data-answer", item.answer);
+      
+      container.appendChild(qDiv);
+    });
+  });
+
+  // Обработчики для текстовых заданий
+  $("#checkTextBtn").addEventListener("click", checkAllText);
+  $("#resetTextBtn").addEventListener("click", resetAllText);
+
+  // Enter для проверки конкретного вопроса
+  container.addEventListener("keydown", function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      var qEl = e.target.closest('.q');
+      if (qEl) checkTextQuestion(qEl);
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
